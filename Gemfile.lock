@@ -1,0 +1,20 @@
+PATH
+  remote: .
+  specs:
+    toml (0.0.1)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    blankslate (2.1.2.4)
+    minitest (4.6.1)
+    parslet (1.5.0)
+      blankslate (~> 2.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  minitest
+  parslet
+  toml!
