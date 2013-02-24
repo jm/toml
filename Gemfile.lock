@@ -2,6 +2,7 @@ PATH
   remote: .
   specs:
     toml (0.0.1)
+      parslet
 
 GEM
   remote: https://rubygems.org/
@@ -16,5 +17,4 @@ PLATFORMS
 
 DEPENDENCIES
   minitest
-  parslet
   toml!
