@@ -36,6 +36,14 @@ module TOML
 
     def coerce(value)
       value = value.strip
+
+      # booleans
+      if value == "true"
+        return true
+      elsif value == "false"
+        return false
+      end
+
       if value =~ /\[(.*)\]/
         # array
         array = $1.split(",").map {|s| s.strip.gsub(/\"(.*)\"/, '\1')}
@@ -45,15 +53,24 @@ module TOML
         return $1
       end
 
+      # times
       begin
         time = Time.parse(value)
         return time
       rescue
       end
 
+      # ints
       begin
         int = Integer(value)
         return int
+      rescue
+      end
+
+      # floats
+      begin
+        float = Float(value)
+        return float
       rescue
       end
 
