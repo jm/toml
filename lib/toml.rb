@@ -7,6 +7,9 @@ require 'yaml'
 
 require 'toml/parser'
 
+require 'parslet'
+require 'toml/parser2'
+
 module TOML
   VERSION = '0.0.1'
 end

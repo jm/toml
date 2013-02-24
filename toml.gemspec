@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
   ## the sub! line in the Rakefile
   s.name              = 'toml'
   s.version           = '0.0.1'
-  s.date              = '2013-02-23'
+  s.date              = '2013-02-24'
 
   ## Make sure your summary is short. The description may be as long
   ## as you like.
@@ -36,17 +36,24 @@ Gem::Specification.new do |s|
   ## LICENSE files to the extra_rdoc_files list.
   s.rdoc_options = ["--charset=UTF-8"]
   s.extra_rdoc_files = %w[README.md LICENSE]
-
+  
+  s.add_dependency 'parslet'
+  
   ## Leave this section as-is. It will be automatically generated from the
   ## contents of your Git repository via the gemspec task. DO NOT REMOVE
   ## THE MANIFEST COMMENTS, they are used as delimiters by the task.
   # = MANIFEST =
   s.files = %w[
+    Gemfile
+    Gemfile.lock
     LICENSE
     README.md
     Rakefile
     lib/toml.rb
     lib/toml/parser.rb
+    lib/toml/parser2.rb
+    test/spec.toml
+    test/test_spec.rb
     toml.gemspec
   ]
   # = MANIFEST =
