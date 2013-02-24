@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   ## If your rubyforge_project name is different, then edit it and comment out
   ## the sub! line in the Rakefile
   s.name              = 'toml'
-  s.version           = '0.0'
+  s.version           = '0.0.1'
   s.date              = '2013-02-23'
 
   ## Make sure your summary is short. The description may be as long
@@ -41,7 +41,14 @@ Gem::Specification.new do |s|
   ## contents of your Git repository via the gemspec task. DO NOT REMOVE
   ## THE MANIFEST COMMENTS, they are used as delimiters by the task.
   # = MANIFEST =
-  s.files = %w[]
+  s.files = %w[
+    LICENSE
+    README.md
+    Rakefile
+    lib/toml.rb
+    lib/toml/parser.rb
+    toml.gemspec
+  ]
   # = MANIFEST =
 
   ## Test files will be grabbed from the file list. Make sure the path glob
