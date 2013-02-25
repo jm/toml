@@ -11,17 +11,36 @@ module TOML
       integer.as(:integer) |
       boolean
     }
-
+    
+    # Finding comments in multiline arrays requires accepting a bunch of
+    # possible newlines and stuff before the comment
+    rule(:array_comments) { (all_space >> comment_line).repeat(0) }
+    
     rule(:array) {
-      str("[") >> (
-        all_space >> value >>
-        (all_space >> str(",") >> all_space >> value).repeat(0) >>
-        all_space
+      str("[") >> ( array_comments >> # Match any comments on first line
+        all_space >> value >> array_comments >>
+        (
+          # Separator followed by any comments
+          all_space >> str(",") >> array_comments >>
+          # Value followed by any comments
+          all_space >> value >> array_comments
+        ).repeat(0) >>
+        all_space >> array_comments # Grab any remaining comments just in case
       ).maybe >> str("]") 
     }
     
-    rule(:key_value) { space >> key.as(:key) >> space >> str("=") >> space >> value >> space >> comment.maybe >> str("\n") >> all_space }
-    rule(:key_group) { space >> str("[") >> key_group_name.as(:key_group) >> str("]") >> space >> comment.maybe >> str("\n") >> all_space }
+    rule(:key_value) { 
+      space >> key.as(:key) >>
+      space >> str("=") >>
+      space >> value.as(:value) >>
+      space >> comment.maybe >> str("\n") >> all_space
+    }
+    rule(:key_group) {
+      space >> str("[") >>
+        key_group_name.as(:key_group) >>
+      str("]") >>
+      space >> comment.maybe >> str("\n") >> all_space
+    }
     
     rule(:key) { match("[^. \t\\]]").repeat(1) }
     rule(:key_group_name) { key.as(:key) >> (str(".") >> key.as(:key)).repeat(0) }
@@ -40,12 +59,13 @@ module TOML
     }
     
     rule(:sign) { str("-") }
-    rule(:integer) {
-      str("0") | (sign.maybe >> match("[1-9]") >> match("[0-9]").repeat(0))
-    }
+    rule(:sign?) { sign.maybe }
     
+    rule(:integer) {
+      str("0") | (sign? >> match("[1-9]") >> match("[0-9]").repeat(0))
+    }
     rule(:float) {
-      sign.maybe >> match("[0-9]").repeat(1) >> str(".") >> match("[0-9]").repeat(1)
+      sign? >> match("[0-9]").repeat(1) >> str(".") >> match("[0-9]").repeat(1)
     }
 
     rule(:boolean) { str("true").as(:true) | str("false").as(:false) }
