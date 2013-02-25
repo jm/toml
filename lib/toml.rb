@@ -15,4 +15,12 @@ require 'toml/parser'
 
 module TOML
   VERSION = '0.0.1'
+
+  def self.load(content)
+    Parser.new(content).parsed
+  end
+
+  def self.load_file(path)
+    Parser.new(File.read(path)).parsed
+  end
 end
