@@ -3,6 +3,9 @@ module TOML
     attr_reader :parsed
 
     def initialize(markup)
+      # Make sure we have a newline on the end
+      markup += "\n" unless markup.end_with?("\n")
+
       tree = Parslet.new.parse(markup)
       parts = Transformer.new.apply(tree)
       
