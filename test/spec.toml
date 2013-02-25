@@ -39,6 +39,20 @@ simple = [1, 2, 3]
 # Nested array
 nested = [[[1], 2], 3]
 
+# Multiline array
+multiline = [
+	1,
+	2,
+	3
+]
+
+# With comments
+multiline_comments = [ # 0
+	1, # 1
+	2, # 2
+	3 # 3
+]
+
 multi = ["lines", "are",
 "super", "cool", "lol",
 "amirite"]

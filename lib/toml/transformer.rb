@@ -35,7 +35,7 @@ module TOML
     # Clean up arrays
     rule(:array => subtree(:ar)) { ar.is_a?(Array) ? ar : [ar] }
 
-    # Clean up simples (inside arrays)
+    # Clean up simple value hashes
     rule(:integer => simple(:i)) { i.to_i }
     rule(:float => simple(:f)) { f.to_f }
     rule(:string => simple(:s)) {
@@ -45,20 +45,9 @@ module TOML
     rule(:true => simple(:b)) { true }
     rule(:false => simple(:b)) { false }
     
-    # TODO: Refactor to remove redundancy
-    rule(:key => simple(:k), :array => subtree(:ar)) { Key.new(k.to_s, ar) }
-    rule(:key => simple(:k), :integer => simple(:i)) { Key.new(k.to_s, i.to_i) }
-    rule(:key => simple(:k), :float => simple(:f)) { Key.new(k.to_s, f.to_f) }
-    rule(:key => simple(:k), :string => simple(:s)) {
-      Key.new(k.to_s, Transformer.parse_string(s.to_s))
-    }
-    rule(:key => simple(:k), :datetime => simple(:d)) {
-      Key.new(k.to_s, DateTime.iso8601(d))
-    }
-    rule(:key => simple(:k), :true => simple(:b)) { Key.new(k.to_s, true) }
-    rule(:key => simple(:k), :false => simple(:b)) { Key.new(k.to_s, false) }
+    rule(:key => simple(:k), :value => subtree(:v)) { Key.new(k.to_s, v) }
     
-    # Make keys just be strings
+    # Make key hashes (inside key_groups) just be strings
     rule(:key => simple(:k)) { k }
 
     # Then objectify the key_groups
