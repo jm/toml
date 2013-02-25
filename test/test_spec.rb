@@ -8,7 +8,7 @@ require 'minitest/autorun'
 class TestParser < MiniTest::Unit::TestCase
   def setup
     filepath = File.join(File.dirname(__FILE__), 'spec.toml')
-    @doc = TOML::Parser2.new(File.read(filepath)).parsed
+    @doc = TOML::Parser.new(File.read(filepath)).parsed
   end
   
   def test_string
@@ -43,7 +43,7 @@ class TestParser < MiniTest::Unit::TestCase
   def test_simple_keygroup
     assert_equal @doc["e"]["f"], "test"
   end
-  
+
   def test_nested_keygroup
     assert_equal @doc["a"]["b"]["c"]["d"], "test"
   end

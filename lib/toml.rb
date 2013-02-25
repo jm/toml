@@ -5,10 +5,13 @@ require 'time'
 require 'syck/encoding'
 require 'yaml'
 
-require 'toml/parser'
-
 require 'parslet'
-require 'toml/parser2'
+
+require 'toml/key'
+require 'toml/key_group'
+require 'toml/parslet'
+require 'toml/transformer'
+require 'toml/parser'
 
 module TOML
   VERSION = '0.0.1'
