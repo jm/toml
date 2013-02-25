@@ -16,10 +16,10 @@ what = 900000
 
 TOML
 
-parser = TOML::Parser.new(content)
+parser = TOML::Parser.new(content).parsed
 # => { "things" => { "other" => "things", "what" => 900000 } }
 ```
 
 ## Contributors
 
-Written by Jeremy McAnally based on TOML from Tom Preston-Werner.
+Written by Jeremy McAnally (@jm) and Dirk Gadsden (@dirk) based on TOML from Tom Preston-Werner (@mojombo).
