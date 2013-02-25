@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   ## If your rubyforge_project name is different, then edit it and comment out
   ## the sub! line in the Rakefile
   s.name              = 'toml'
-  s.version           = '0.0.1'
+  s.version           = '0.0.2'
   s.date              = '2013-02-24'
 
   ## Make sure your summary is short. The description may be as long
@@ -24,7 +24,7 @@ Gem::Specification.new do |s|
   ## List the primary authors. If there are a bunch of authors, it's probably
   ## better to set the email to an email list or something. If you don't have
   ## a custom homepage, consider using your GitHub URL or the like.
-  s.authors  = ["Jeremy McAnally"]
+  s.authors  = ["Jeremy McAnally", "Dirk Gadsden"]
   s.email    = 'jeremy@github.com'
   s.homepage = 'http://github.com/jm/toml'
 
@@ -50,10 +50,13 @@ Gem::Specification.new do |s|
     README.md
     Rakefile
     lib/toml.rb
+    lib/toml/key.rb
+    lib/toml/key_group.rb
     lib/toml/parser.rb
-    lib/toml/parser2.rb
+    lib/toml/parslet.rb
+    lib/toml/transformer.rb
     test/spec.toml
-    test/test_spec.rb
+    test/test_parser.rb
     toml.gemspec
   ]
   # = MANIFEST =
