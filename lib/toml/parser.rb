@@ -1,116 +1,192 @@
 module TOML
-  class Parser
-    attr_reader :parsed
+  class ParsletParser < ::Parslet::Parser
+    rule(:document) { (key_group | key_value | comment_line).repeat(0) }
+    root :document
 
-    def initialize(markup)
-      lines = markup.split("\n").reject {|l| l =~ /[\s]?#/ }
+    rule(:value) {
+      array.as(:array) |
+      string |
+      datetime.as(:datetime) |
+      float.as(:float) |
+      integer.as(:integer) |
+      boolean
+    }
 
-      @parsed = {}
-      @current_key_group = ""
-      @current_set = {}
+    rule(:array) {
+      str("[") >> (
+        all_space >> value >>
+        (all_space >> str(",") >> all_space >> value).repeat(0) >>
+        all_space
+      ).maybe >> str("]") 
+    }
+    
+    rule(:key_value) { space >> key.as(:key) >> space >> str("=") >> space >> value >> space >> comment.maybe >> str("\n") >> all_space }
+    rule(:key_group) { space >> str("[") >> key_group_name.as(:key_group) >> str("]") >> space >> comment.maybe >> str("\n") >> all_space }
+    
+    rule(:key) { match("[^. \t\\]]").repeat(1) }
+    rule(:key_group_name) { key.as(:key) >> (str(".") >> key.as(:key)).repeat(0) }
 
-      lines.each do |line|
-        if line.gsub(/\s/, '').empty?
-          close_key_group
-        elsif line =~ /^\s*\[(.*)\]/
-          new_key_group($1)
-        elsif line =~ /\s?(.*)=(.*)/
-          add_key($1, $2)
-        else
-          raise "lmao i have no clue what you're doing: #{line}"
-        end
-      end
+    rule(:comment_line) { comment >> str("\n") >> all_space }
+    rule(:comment) { str("#") >> match("[^\n]").repeat(0) }
 
-      close_key_group unless @current_key_group.empty?
-    end
+    rule(:space) { match("[ \t]").repeat(0) }
+    rule(:all_space) { match("[ \t\r\n]").repeat(0) }
+        
+    rule(:string) {
+      str('"') >> (
+      match("[^\"\\\\]") |
+      (str("\\") >> match("[0tnr\"\\\\]"))
+      ).repeat(0).as(:string) >> str('"')
+    }
+    
+    rule(:sign) { str("-") }
+    rule(:integer) {
+      str("0") | (sign.maybe >> match("[1-9]") >> match("[0-9]").repeat(0))
+    }
+    
+    rule(:float) {
+      sign.maybe >> match("[0-9]").repeat(1) >> str(".") >> match("[0-9]").repeat(1)
+    }
 
-    def new_key_group(key_name)
-      @current_key_group = key_name
-    end
+    rule(:boolean) { str("true").as(:true) | str("false").as(:false) }
+    
+    rule(:date) {
+      match("[0-9]").repeat(4,4) >> str("-") >>
+      match("[0-9]").repeat(2,2) >> str("-") >>
+      match("[0-9]").repeat(2,2)
+    }
 
-    def add_key(key, value)
-      @current_set[key.strip] = coerce(strip_comments(value))
-    end
+    rule(:time) {
+      match("[0-9]").repeat(2,2) >> str(":") >>
+      match("[0-9]").repeat(2,2) >> str(":") >>
+      match("[0-9]").repeat(2,2)
+    }
 
-    def strip_comments(text)
-      text.split("#").first
-    end
-
-    def coerce(value)
-      value = value.strip
-
-      # booleans
-      if value == "true"
-        return true
-      elsif value == "false"
-        return false
-      end
-
-      if value =~ /\[(.*)\]/
-        # array
-        array = $1.split(",").map {|s| s.strip.gsub(/\"(.*)\"/, '\1')}
-        return array
-      elsif value =~ /\"(.*)\"/
-        # string
-        return Syck.unescape($1)
-      end
-
-      # times
-      begin
-        time = Time.parse(value)
-        return time
-      rescue
-      end
-
-      # ints
-      begin
-        int = Integer(value)
-        return int
-      rescue
-      end
-
-      # floats
-      begin
-        float = Float(value)
-        return float
-      rescue
-      end
-
-      raise "lol no clue what [#{value}] is"
-    end
-
-    def close_key_group
-      pieces = @current_key_group.split(".")
-      top_level_key = pieces.shift
-
-      value = if pieces.empty?
-        @current_set
-      else
-        nest_pieces(pieces, @current_set)
-      end
-
-      deep_merge_hash(@parsed, {top_level_key => value})
-
-      @current_set = {}
-      @current_key_group = ""
-    end
-
-    def nest_pieces(pieces, final_value)
-      return final_value if pieces.empty?
-      {pieces.shift => nest_pieces(pieces, final_value)}
-    end
-
-    def deep_merge_hash(hash, other_hash)
-      other_hash.each_pair do |k,v|
-        tv = hash[k]
-        if tv.is_a?(Hash) && v.is_a?(Hash)
-          hash[k] = deep_merge_hash(tv, v)
-        else
-          hash[k] = v
-        end
-      end
-
-      hash
+    rule(:datetime) { date >> str("T") >> time >> str("Z") }
+  end
+  
+  class Key
+    attr_reader :key, :value
+    def initialize(key, value)
+      @key = key
+      @value = value
     end
   end
+
+  class KeyGroup
+    attr_reader :keys
+    def initialize(keys)
+      @keys = keys
+    end
+  end
+  
+  class ParsletTransformer < ::Parslet::Transform
+    # Utility to properly handle escape sequences in parsed string.
+    def self.parse_string(val)
+      e = val.length
+      s = 0
+      o = []
+      while s < e
+        if val[s] == "\\"
+          s += 1
+          case val[s]
+          when "t"
+            o << "\t"
+          when "n"
+            o << "\n"
+          when "\\"
+            o << "\\"
+          when '"'
+            o << '"'
+          when "r"
+            o << "\r"
+          when "0"
+            o << "\0"
+          else
+            raise "Unexpected escape character: '\\#{val[s]}'"
+          end
+        else
+          o << val[s]
+        end
+        s += 1
+      end
+      o.join
+    end
+    
+    # Clean up arrays
+    rule(:array => subtree(:ar)) { ar.is_a?(Array) ? ar : [ar] }
+
+    # Clean up simples (inside arrays)
+    rule(:integer => simple(:i)) { i.to_i }
+    rule(:float => simple(:f)) { f.to_f }
+    rule(:string => simple(:s)) {
+      ParsletTransformer.parse_string(s.to_s)
+    }
+    rule(:datetime => simple(:d)) { DateTime.iso8601(d) }
+    rule(:true => simple(:b)) { true }
+    rule(:false => simple(:b)) { false }
+    
+    # TODO: Refactor to remove redundancy
+    rule(:key => simple(:k), :array => subtree(:ar)) { Key.new(k.to_s, ar) }
+    rule(:key => simple(:k), :integer => simple(:i)) { Key.new(k.to_s, i.to_i) }
+    rule(:key => simple(:k), :float => simple(:f)) { Key.new(k.to_s, f.to_f) }
+    rule(:key => simple(:k), :string => simple(:s)) {
+      Key.new(k.to_s, ParsletTransformer.parse_string(s.to_s))
+    }
+    rule(:key => simple(:k), :datetime => simple(:d)) {
+      Key.new(k.to_s, DateTime.iso8601(d))
+    }
+    rule(:key => simple(:k), :true => simple(:b)) { Key.new(k.to_s, true) }
+    rule(:key => simple(:k), :false => simple(:b)) { Key.new(k.to_s, false) }
+    
+    # Make keys just be strings
+    rule(:key => simple(:k)) { k }
+
+    # Then objectify the key_groups
+    rule(:key_group => simple(:kg)) {
+      KeyGroup.new([kg.to_s])
+    }
+
+    # Captures array-like key-groups
+    rule(:key_group => subtree(:kg)) {
+      KeyGroup.new(kg.map &:to_s)
+    }
+  end
+  
+  class Parser2
+    attr_reader :parsed
+    def initialize(markup)
+      tree = ParsletParser.new.parse(markup)
+      parts = ParsletTransformer.new.apply(tree)
+      
+      @parsed = {}
+      @current = @parsed
+      
+      parts.each do |part|
+        if part.is_a? Key
+          @current[part.key] = part.value
+        elsif part.is_a? KeyGroup
+          resolve_key_group(part)
+        else
+          raise "Unrecognized part: #{part.inspect}"
+        end
+      end
+      
+    end
+    
+    def resolve_key_group(kg)
+      @current = @parsed
+      path = kg.keys.dup
+      while k = path.shift
+        if @current.has_key? k
+          # pass
+        else
+          @current[k] = {}
+        end
+        @current = @current[k]
+      end
+    end
+    
+  end
+  
 end
