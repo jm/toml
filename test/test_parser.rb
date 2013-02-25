@@ -47,4 +47,8 @@ class TestParser < MiniTest::Unit::TestCase
   def test_nested_keygroup
     assert_equal @doc["a"]["b"]["c"]["d"], "test"
   end
+
+  def test_multiline_arrays
+    assert_equal ["lines", "are", "super", "cool", "lol", "amirite"], @doc["arrays"]["multi"]
+  end
 end
