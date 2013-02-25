@@ -20,6 +20,16 @@ parser = TOML::Parser.new(content).parsed
 # => { "things" => { "other" => "things", "what" => 900000 } }
 ```
 
+You can also use the same API as `YAML` if you'd like:
+
+```ruby
+TOML.load("thing = 9")
+# => {"thing" => 9}
+
+TOML.load_file("my_file.toml")
+# => {"whatever" => "keys"}
+```
+
 ## Contributors
 
 Written by Jeremy McAnally (@jm) and Dirk Gadsden (@dirk) based on TOML from Tom Preston-Werner (@mojombo).
