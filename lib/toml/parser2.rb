@@ -1,6 +1,8 @@
 module TOML
   class ParsletParser < ::Parslet::Parser
-    
+    rule(:document) { (key_group | key_value | comment_line).repeat(0) }
+    root :document
+
     rule(:value) {
       array.as(:array) |
       string |
@@ -9,28 +11,27 @@ module TOML
       integer.as(:integer) |
       boolean
     }
+
     rule(:array) {
       str("[") >> (
-        allspace >> value >>
-        (allspace >> str(",") >> allspace >> value).repeat(0) >>
-        allspace
+        all_space >> value >>
+        (all_space >> str(",") >> all_space >> value).repeat(0) >>
+        all_space
       ).maybe >> str("]") 
     }
     
-    rule(:keyvalue) { space >> key.as(:key) >> space >> str("=") >> space >> value >> space >> comment.maybe >> str("\n") >> allspace }
-    rule(:keygroup) { space >> str("[") >> keygroupname.as(:keygroup) >> str("]") >> space >> comment.maybe >> str("\n") >> allspace }
-    rule(:commentline) { comment >> str("\n") >> allspace }
-    
-    rule(:document) { (keygroup | keyvalue | commentline).repeat(0) }
-    root :document
-    
-    rule(:comment) { str("#") >> match("[^\n]").repeat(0) }
-    rule(:space) { match("[ \t]").repeat(0) }
-    rule(:allspace) { match("[ \t\r\n]").repeat(0) }
+    rule(:key_value) { space >> key.as(:key) >> space >> str("=") >> space >> value >> space >> comment.maybe >> str("\n") >> all_space }
+    rule(:key_group) { space >> str("[") >> key_group_name.as(:key_group) >> str("]") >> space >> comment.maybe >> str("\n") >> all_space }
     
     rule(:key) { match("[^. \t\\]]").repeat(1) }
-    rule(:keygroupname) { key.as(:key) >> (str(".") >> key.as(:key)).repeat(0) }
-    
+    rule(:key_group_name) { key.as(:key) >> (str(".") >> key.as(:key)).repeat(0) }
+
+    rule(:comment_line) { comment >> str("\n") >> all_space }
+    rule(:comment) { str("#") >> match("[^\n]").repeat(0) }
+
+    rule(:space) { match("[ \t]").repeat(0) }
+    rule(:all_space) { match("[ \t\r\n]").repeat(0) }
+        
     rule(:string) {
       str('"') >> (
       match("[^\"\\\\]") |
@@ -42,9 +43,11 @@ module TOML
     rule(:integer) {
       str("0") | (sign.maybe >> match("[1-9]") >> match("[0-9]").repeat(0))
     }
+    
     rule(:float) {
       sign.maybe >> match("[0-9]").repeat(1) >> str(".") >> match("[0-9]").repeat(1)
     }
+
     rule(:boolean) { str("true").as(:true) | str("false").as(:false) }
     
     rule(:date) {
@@ -52,13 +55,14 @@ module TOML
       match("[0-9]").repeat(2,2) >> str("-") >>
       match("[0-9]").repeat(2,2)
     }
+
     rule(:time) {
       match("[0-9]").repeat(2,2) >> str(":") >>
       match("[0-9]").repeat(2,2) >> str(":") >>
       match("[0-9]").repeat(2,2)
     }
+
     rule(:datetime) { date >> str("T") >> time >> str("Z") }
-    
   end
   
   class Key
@@ -68,6 +72,7 @@ module TOML
       @value = value
     end
   end
+
   class KeyGroup
     attr_reader :keys
     def initialize(keys)
@@ -76,7 +81,6 @@ module TOML
   end
   
   class ParsletTransformer < ::Parslet::Transform
-    
     # Utility to properly handle escape sequences in parsed string.
     def self.parse_string(val)
       e = val.length
@@ -111,6 +115,7 @@ module TOML
     
     # Clean up arrays
     rule(:array => subtree(:ar)) { ar.is_a?(Array) ? ar : [ar] }
+
     # Clean up simples (inside arrays)
     rule(:integer => simple(:i)) { i.to_i }
     rule(:float => simple(:f)) { f.to_f }
@@ -136,15 +141,16 @@ module TOML
     
     # Make keys just be strings
     rule(:key => simple(:k)) { k }
-    # Then objectify the keygroups
-    rule(:keygroup => simple(:kg)) {
+
+    # Then objectify the key_groups
+    rule(:key_group => simple(:kg)) {
       KeyGroup.new([kg.to_s])
     }
+
     # Captures array-like key-groups
-    rule(:keygroup => subtree(:kg)) {
+    rule(:key_group => subtree(:kg)) {
       KeyGroup.new(kg.map &:to_s)
     }
-    
   end
   
   class Parser2

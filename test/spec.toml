@@ -16,15 +16,28 @@ false = false
 # DateTime
 datetime = 1979-05-27T07:32:00Z
 
-# Simple array
-simple_array = [1, 2, 3]
-
-# Nested array
-nested_array = [[[1], 2], 3]
-
 # Keygroup
 [a.b.c]
 d = "test"
 
 [e]
 f = "test"
+
+# Post line comment
+[comments]
+on = "a line" # with markup
+
+# Multi-line arrays
+[arrays]
+# Simple array
+simple = [1, 2, 3]
+
+# Nested array
+nested = [[[1], 2], 3]
+
+multi = ["lines", "are",
+"super", "cool", "lol",
+"amirite"]
+
+# Uneven spacing
+uneven = [1, 2, 3,  4, 5 ]
