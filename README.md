@@ -2,6 +2,8 @@
 
 A sane configuration format from @mojombo.  More information here: https://github.com/mojombo/toml
 
+This is far superior to YAML and JSON because it doesn't suck.
+
 ## Usage
 
 It's simple, really.
