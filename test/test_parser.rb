@@ -12,32 +12,44 @@ class TestParser < MiniTest::Unit::TestCase
   end
   
   def test_string
-    assert_equal @doc["string"], "string\n\t\"string"
+    assert_equal "string\n\t\"string", @doc["strings"]["string"]
   end
 
   def test_integer
-    assert_equal @doc["integer"], 42
+    assert_equal 42, @doc["ints"]["simple"]
+  end
+
+  def test_negative_integer
+    assert_equal -42, @doc["ints"]["negative"]
   end
 
   def test_float
-    assert_equal @doc["pi"], 3.14159
+    assert_equal 3.14159, @doc["floats"]["pi"]
+  end
+
+  def test_negative_float
+    assert_equal -10.0, @doc["floats"]["negative"]
   end
 
   def test_datetime
-    assert_equal @doc["datetime"], DateTime.iso8601("1979-05-27T07:32:00Z")
+    assert_equal DateTime.iso8601("1979-05-27T07:32:00Z"), @doc["datetimes"]["simple"]
   end
 
   def test_booleans
-    assert_equal @doc["true"], true
-    assert_equal @doc["false"], false
+    assert_equal true, @doc["true"]
+    assert_equal false, @doc["false"]
   end
 
   def test_simple_array
-    assert_equal @doc["arrays"]["simple"], [1, 2, 3]
+    assert_equal [1, 2, 3], @doc["arrays"]["simple"]
   end
 
   def test_nested_array
-    assert_equal @doc["arrays"]["nested"], [[[1], 2], 3]
+    assert_equal [[[1], 2], 3], @doc["arrays"]["nested"]
+  end
+
+  def test_multiline_arrays
+    assert_equal ["lines", "are", "super", "cool", "lol", "amirite"], @doc["arrays"]["multi"]
   end
   
   def test_multiline_array
@@ -49,10 +61,14 @@ class TestParser < MiniTest::Unit::TestCase
   end
 
   def test_simple_keygroup
-    assert_equal @doc["e"]["f"], "test"
+    assert_equal "test", @doc["e"]["f"]
   end
 
   def test_nested_keygroup
-    assert_equal @doc["a"]["b"]["c"]["d"], "test"
+    assert_equal "test", @doc["a"]["b"]["c"]["d"]
+  end
+
+  def test_inline_comment
+    assert_equal "a line", @doc["comments"]["on"]
   end
 end

@@ -1,22 +1,26 @@
 # Comment
 
-# String
-string = "string\n\t\"string"
-
-# Integer
-integer = 42
-
-# Float
-pi = 3.14159
-
 # Booleans
 true = true
 false = false
 
-# DateTime
-datetime = 1979-05-27T07:32:00Z
+[strings]
+# String
+string = "string\n\t\"string"
 
-# Keygroup
+[ints]
+simple = 42
+negative = -42
+
+[floats]
+pi = 3.14159
+negative = -10.0
+
+[datetimes]
+# DateTime
+simple = 1979-05-27T07:32:00Z
+
+# Keygroups
 [a.b.c]
 d = "test"
 
