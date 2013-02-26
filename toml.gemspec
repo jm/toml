@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
   ## the sub! line in the Rakefile
   s.name              = 'toml'
   s.version           = '0.0.2'
-  s.date              = '2013-02-24'
+  s.date              = '2013-02-25'
 
   ## Make sure your summary is short. The description may be as long
   ## as you like.
@@ -50,12 +50,14 @@ Gem::Specification.new do |s|
     README.md
     Rakefile
     lib/toml.rb
+    lib/toml/generator.rb
     lib/toml/key.rb
     lib/toml/key_group.rb
     lib/toml/parser.rb
     lib/toml/parslet.rb
     lib/toml/transformer.rb
     test/spec.toml
+    test/test_generator.rb
     test/test_parser.rb
     toml.gemspec
   ]
