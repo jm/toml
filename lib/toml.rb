@@ -8,6 +8,7 @@ require 'toml/key_group'
 require 'toml/parslet'
 require 'toml/transformer'
 require 'toml/parser'
+require 'toml/generator'
 
 module TOML
   VERSION = '0.0.2'
