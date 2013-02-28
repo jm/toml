@@ -54,8 +54,17 @@ module TOML
         # If it's an {:array => ...} hash
         a = h[:array]
         if a.is_a? Array
-          # If the value  is already an array
-          return a.map {|v| visit_array(v) }
+          # If the value is already an array
+          a = a.map {|v| visit_array(v) }
+          classes = a.map {|v|
+            # Grab the class, with a little exception for true and false since
+            # they're different classes (TrueClass and FalseClass).
+            (v == true || v == false) ? true : v.class
+          }
+          if classes.uniq.length != 1
+            raise "Conflicting types in array: " + classes.map(&:to_s).join(", ")
+          end
+          return a
         else
           # Turn the value into an array
           return [visit_array(a)].compact

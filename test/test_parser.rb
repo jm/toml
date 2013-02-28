@@ -45,7 +45,7 @@ class TestParser < MiniTest::Unit::TestCase
   end
 
   def test_nested_array
-    assert_equal [[[1], 2], 3], @doc["arrays"]["nested"]
+    assert_equal [[1, 2], [3]], @doc["arrays"]["nested"]
   end
 
   def test_multiline_arrays
