@@ -7,6 +7,7 @@ module TOML
       markup += "\n" unless markup.end_with?("\n")
 
       tree = Parslet.new.parse(markup)
+      
       parts = Transformer.new.apply(tree)
       
       @parsed = {}

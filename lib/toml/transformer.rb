@@ -1,4 +1,5 @@
 module TOML
+  
   class Transformer < ::Parslet::Transform
     # Utility to properly handle escape sequences in parsed string.
     def self.parse_string(val)
@@ -33,8 +34,8 @@ module TOML
     end
     
     # Clean up arrays
-    rule(:array => subtree(:ar)) { ar.is_a?(Array) ? ar : [ar] }
-
+    # rule(:array => subtree(:ar)) { ar.is_a?(Array) ? ar : [ar] }
+    
     # Clean up simple value hashes
     rule(:integer => simple(:i)) { i.to_i }
     rule(:float => simple(:f)) { f.to_f }
@@ -45,7 +46,28 @@ module TOML
     rule(:true => simple(:b)) { true }
     rule(:false => simple(:b)) { false }
     
-    rule(:key => simple(:k), :value => subtree(:v)) { Key.new(k.to_s, v) }
+    rule(:key => simple(:k), :value => simple(:v)) { Key.new(k.to_s, v) }
+    
+    # New array cleanup
+    def self.visit_array(h)
+      if h.is_a? Hash
+        # If it's an {:array => ...} hash
+        a = h[:array]
+        if a.is_a? Array
+          # If the value  is already an array
+          return a.map {|v| visit_array(v) }
+        else
+          # Turn the value into an array
+          return [visit_array(a)].compact
+        end
+      else
+        # Plain old non-hash value
+        return h
+      end
+    end
+    rule(:key => simple(:k), :value => subtree(:v)) {
+      Key.new(k.to_s, Transformer.visit_array(v))
+    }
     
     # Make key hashes (inside key_groups) just be strings
     rule(:key => simple(:k)) { k }
