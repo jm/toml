@@ -1,6 +1,10 @@
 module TOML
   class Parslet < ::Parslet::Parser
-    rule(:document) { (key_group | key_value | comment_line).repeat(0) }
+    rule(:document) {
+      all_space >>
+      (key_group | key_value | comment_line).repeat(0) >>
+      all_space
+    }
     root :document
 
     rule(:value) {
