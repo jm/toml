@@ -49,6 +49,7 @@ module TOML
     rule(:key => simple(:k), :value => simple(:v)) { Key.new(k.to_s, v) }
     
     # New array cleanup
+    # TODO: Make this more readable/understandable.
     def self.visit_array(h)
       if h.is_a? Hash
         # If it's an {:array => ...} hash
@@ -62,7 +63,8 @@ module TOML
             (v == true || v == false) ? true : v.class
           }
           if classes.uniq.length != 1
-            raise "Conflicting types in array: " + classes.map(&:to_s).join(", ")
+            raise "Conflicting types in array: " + \
+              classes.map(&:to_s).join(", ")
           end
           return a
         else
