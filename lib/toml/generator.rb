@@ -4,6 +4,10 @@ module TOML
     attr_reader :body, :doc
 
     def initialize(doc)
+      # Ensure all the to_toml methods are injected into the base Ruby classes
+      # used by TOML.
+      self.class.inject!
+      
       @body = ""
       @doc = doc
       
@@ -11,6 +15,34 @@ module TOML
       
       return @body
     end
+    
+    @@injected = false # Whether or not the injections have already been done.
+    
+    # Inject to_toml methods into the Ruby classes used by TOML (booleans,
+    # String, Numeric, Array). You can add to_toml methods to your own classes
+    # to allow them to be easily serialized by the generator (and it will shout
+    # if something doesn't have a to_toml method).
+    def self.inject!
+      return if @@injected
+      
+      TrueClass.instance_eval  { define_method(:to_toml) { "true" } }
+      FalseClass.instance_eval { define_method(:to_toml) { "false" } }
+      String.instance_eval do
+        define_method(:to_toml) do
+          # TODO: Make sure this is 100% TOML spec-compliant.
+          self.inspect
+        end
+      end
+      Numeric.instance_eval { define_method(:to_toml) { self.to_s } }
+      Array.instance_eval do
+        define_method(:to_toml) do
+          # TODO: Add validations to make sure all values are the same type.
+          "[" + self.map {|v| v.to_toml }.join(",") + "]"
+        end
+      end
+      
+      @@injected = true
+    end#self.inject!
     
     def visit(hash, path = "")
       hash_pairs = [] # Sub-hashes
@@ -45,8 +77,7 @@ module TOML
     
     # Returns the value formatted for TOML.
     def format(val)
-      # For most everything this should work just fine.
-      val.inspect # TODO: Real escaping and such.
+      val.to_toml
     end
     
   end#Generator
