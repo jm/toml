@@ -13,7 +13,7 @@ class TestGenerator < MiniTest::Unit::TestCase
       "true" => true,
       "false" => false,
       "string" => "hi",
-      "array" => [[1], 2, [3]],
+      "array" => [[1], [2], [3]],
       "key" => {
         "group" => {
           "value" => "lol"
