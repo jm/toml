@@ -25,21 +25,7 @@ module TOML
     def self.inject!
       return if @@injected
       
-      TrueClass.instance_eval  { define_method(:to_toml) { "true" } }
-      FalseClass.instance_eval { define_method(:to_toml) { "false" } }
-      String.instance_eval do
-        define_method(:to_toml) do
-          # TODO: Make sure this is 100% TOML spec-compliant.
-          self.inspect
-        end
-      end
-      Numeric.instance_eval { define_method(:to_toml) { self.to_s } }
-      Array.instance_eval do
-        define_method(:to_toml) do
-          # TODO: Add validations to make sure all values are the same type.
-          "[" + self.map {|v| v.to_toml }.join(",") + "]"
-        end
-      end
+      require 'toml/monkey_patch'
       
       @@injected = true
     end#self.inject!

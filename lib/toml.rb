@@ -9,6 +9,7 @@ require 'toml/parslet'
 require 'toml/transformer'
 require 'toml/parser'
 require 'toml/generator'
+# require 'toml/monkey_patch
 
 module TOML
   VERSION = '0.0.2'
