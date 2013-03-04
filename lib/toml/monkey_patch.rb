@@ -13,7 +13,9 @@ class Numeric
 end
 class Array
   def to_toml
-    # TODO: Add validations to make sure all values are the same type.
+    unless self.map(&:class).uniq.length < 2
+      raise "All array values must be the same type"
+    end
     "[" + self.map {|v| v.to_toml }.join(",") + "]"
   end
 end
