@@ -1,10 +1,14 @@
 module TOML
   class Parslet < ::Parslet::Parser
-    rule(:document) { (key_group | key_value | comment_line).repeat(0) }
+    rule(:document) {
+      all_space >>
+      (key_group | key_value | comment_line).repeat(0) >>
+      all_space
+    }
     root :document
 
     rule(:value) {
-      array.as(:array) |
+      array |
       string |
       datetime.as(:datetime) |
       float.as(:float) |
@@ -26,7 +30,7 @@ module TOML
           all_space >> value >> array_comments
         ).repeat(0) >>
         all_space >> array_comments # Grab any remaining comments just in case
-      ).maybe >> str("]") 
+      ).maybe.as(:array) >> str("]") 
     }
     
     rule(:key_value) { 

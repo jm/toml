@@ -8,6 +8,10 @@ require 'toml/key_group'
 require 'toml/parslet'
 require 'toml/transformer'
 require 'toml/parser'
+require 'toml/generator'
+# Don't do monkey-patching by default. Only pulled in by TOML::Generator
+# if needed (see generator.rb line 27).
+# require 'toml/monkey_patch
 
 module TOML
   VERSION = '0.0.2'
