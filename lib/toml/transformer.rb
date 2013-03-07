@@ -42,6 +42,10 @@ module TOML
     rule(:string => simple(:s)) {
       Transformer.parse_string(s.to_s)
     }
+    rule(:string => sequence(:s)) {
+      raise "Unexpected string-sequence: #{s.inspect}" unless s.empty?
+      ""
+    }
     rule(:datetime => simple(:d)) { DateTime.iso8601(d) }
     rule(:true => simple(:b)) { true }
     rule(:false => simple(:b)) { false }
