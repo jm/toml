@@ -10,9 +10,10 @@ class TestParser < MiniTest::Unit::TestCase
     filepath = File.join(File.dirname(__FILE__), 'spec.toml')
     @doc = TOML::Parser.new(File.read(filepath)).parsed
   end
-  
+
   def test_string
     assert_equal "string\n\t\"string", @doc["strings"]["string"]
+    assert_equal "", @doc["strings"]["empty"]
   end
 
   def test_integer
