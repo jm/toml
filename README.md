@@ -6,6 +6,12 @@ This is far superior to YAML and JSON because it doesn't suck.  Really it doesn'
 
 ## Usage
 
+Add to your Gemfile:
+
+```ruby
+gem "toml", "~> 0.0.3"
+```
+
 It's simple, really.
 
 ```ruby
