@@ -4,6 +4,8 @@ A sane configuration format from @mojombo.  More information here: https://githu
 
 This is far superior to YAML and JSON because it doesn't suck.  Really it doesn't.
 
+**There is a bug in Rails 2.3's vendored version of BlankSlate (a dependency of Parslet which is used for parsing TOML) that breaks Parslet; please see this [Gist](https://gist.github.com/dirk/5264004) for a workaround.**
+
 ## Usage
 
 Add to your Gemfile:
