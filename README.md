@@ -38,6 +38,26 @@ TOML.load_file("my_file.toml")
 # => {"whatever" => "keys"}
 ```
 
+There's also a beta feature for generating a TOML file from a Ruby hash. Please note this will likely not give beautiful output right now.
+
+```ruby
+hash = {
+  "integer" => 1,
+  "float" => 3.14159,
+  "true" => true,
+  "false" => false,
+  "string" => "hi",
+  "array" => [[1], [2], [3]],
+  "key" => {
+    "group" => {
+      "value" => "lol"
+    }
+  }
+}
+doc = TOML::Generator.new(hash).body
+# doc will be a string containing a proper TOML document.
+```
+
 ## Contributors
 
 Written by Jeremy McAnally (@jm) and Dirk Gadsden (@dirk) based on TOML from Tom Preston-Werner (@mojombo).
