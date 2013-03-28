@@ -14,7 +14,7 @@ require 'toml/generator'
 # require 'toml/monkey_patch
 
 module TOML
-  VERSION = '0.0.3'
+  VERSION = '0.0.4'
 
   def self.load(content)
     Parser.new(content).parsed
