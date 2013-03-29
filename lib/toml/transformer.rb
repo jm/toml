@@ -7,9 +7,9 @@ module TOML
       s = 0
       o = []
       while s < e
-        if val[s] == "\\"
+        if val[s].chr == "\\"
           s += 1
-          case val[s]
+          case val[s].chr
           when "t"
             o << "\t"
           when "n"
@@ -26,7 +26,7 @@ module TOML
             raise "Unexpected escape character: '\\#{val[s]}'"
           end
         else
-          o << val[s]
+          o << val[s].chr
         end
         s += 1
       end
