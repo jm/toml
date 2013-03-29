@@ -46,19 +46,19 @@ module TOML
       space >> comment.maybe >> str("\n") >> all_space
     }
     
-    rule(:key) { match("[^. \t\\]]").repeat(1) }
+    rule(:key) { match["^. \t\\]"].repeat(1) }
     rule(:key_group_name) { key.as(:key) >> (str(".") >> key.as(:key)).repeat(0) }
 
     rule(:comment_line) { comment >> str("\n") >> all_space }
-    rule(:comment) { str("#") >> match("[^\n]").repeat(0) }
+    rule(:comment) { str("#") >> match["^\n"].repeat(0) }
 
-    rule(:space) { match("[ \t]").repeat(0) }
-    rule(:all_space) { match("[ \t\r\n]").repeat(0) }
+    rule(:space) { match[" \t"].repeat(0) }
+    rule(:all_space) { match[" \t\r\n"].repeat(0) }
         
     rule(:string) {
       str('"') >> (
-      match("[^\"\\\\]") |
-      (str("\\") >> match("[0tnr\"\\\\]"))
+      match["^\"\\\\"] |
+      (str("\\") >> match["0tnr\"\\\\"])
       ).repeat(0).as(:string) >> str('"')
     }
     
@@ -66,24 +66,24 @@ module TOML
     rule(:sign?) { sign.maybe }
     
     rule(:integer) {
-      str("0") | (sign? >> match("[1-9]") >> match("[0-9]").repeat(0))
+      str("0") | (sign? >> match["1-9"] >> match["0-9"].repeat(0))
     }
     rule(:float) {
-      sign? >> match("[0-9]").repeat(1) >> str(".") >> match("[0-9]").repeat(1)
+      sign? >> match["0-9"].repeat(1) >> str(".") >> match["0-9"].repeat(1)
     }
 
     rule(:boolean) { str("true").as(:true) | str("false").as(:false) }
     
     rule(:date) {
-      match("[0-9]").repeat(4,4) >> str("-") >>
-      match("[0-9]").repeat(2,2) >> str("-") >>
-      match("[0-9]").repeat(2,2)
+      match["0-9"].repeat(4,4) >> str("-") >>
+      match["0-9"].repeat(2,2) >> str("-") >>
+      match["0-9"].repeat(2,2)
     }
 
     rule(:time) {
-      match("[0-9]").repeat(2,2) >> str(":") >>
-      match("[0-9]").repeat(2,2) >> str(":") >>
-      match("[0-9]").repeat(2,2)
+      match["0-9"].repeat(2,2) >> str(":") >>
+      match["0-9"].repeat(2,2) >> str(":") >>
+      match["0-9"].repeat(2,2)
     }
 
     rule(:datetime) { date >> str("T") >> time >> str("Z") }
