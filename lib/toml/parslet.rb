@@ -39,13 +39,13 @@ module TOML
       space >> key.as(:key) >>
       space >> str("=") >>
       space >> value.as(:value) >>
-      space >> comment.maybe >> str("\n") >> all_space
+      space >> comment.maybe >> newline >> all_space
     }
     rule(:table) {
       space >> str("[") >>
         table_name.as(:table) >>
       str("]") >>
-      space >> comment.maybe >> str("\n") >> all_space
+      space >> comment.maybe >> newline >> all_space
     }
     rule(:table_array) {
       space >> str("[[") >>
@@ -57,11 +57,12 @@ module TOML
     rule(:key) { match["^. \t\\]"].repeat(1) }
     rule(:table_name) { key.as(:key) >> (str(".") >> key.as(:key)).repeat }
 
-    rule(:comment_line) { comment >> str("\n") >> all_space }
+    rule(:comment_line) { comment >> newline >> all_space }
     rule(:comment) { str("#") >> match["^\n"].repeat }
 
     rule(:space) { match[" \t"].repeat }
     rule(:all_space) { match[" \t\r\n"].repeat }
+    rule(:newline) { str("\r").maybe >> str("\n") | str("\r") >> str("\n").maybe }
         
     rule(:string) {
       str('"') >> (
