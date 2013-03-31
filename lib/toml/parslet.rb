@@ -2,7 +2,7 @@ module TOML
   class Parslet < ::Parslet::Parser
     rule(:document) {
       all_space >>
-      (key_group | key_value | comment_line).repeat(0) >>
+      (key_group | key_value | comment_line).repeat >>
       all_space
     }
     root :document
@@ -18,7 +18,7 @@ module TOML
     
     # Finding comments in multiline arrays requires accepting a bunch of
     # possible newlines and stuff before the comment
-    rule(:array_comments) { (all_space >> comment_line).repeat(0) }
+    rule(:array_comments) { (all_space >> comment_line).repeat }
     
     rule(:array) {
       str("[") >> ( array_comments >> # Match any comments on first line
@@ -28,7 +28,7 @@ module TOML
           all_space >> str(",") >> array_comments >>
           # Value followed by any comments
           all_space >> value >> array_comments
-        ).repeat(0) >>
+        ).repeat >>
         all_space >> array_comments # Grab any remaining comments just in case
       ).maybe.as(:array) >> str("]") 
     }
@@ -47,26 +47,26 @@ module TOML
     }
     
     rule(:key) { match("[^. \t\\]]").repeat(1) }
-    rule(:key_group_name) { key.as(:key) >> (str(".") >> key.as(:key)).repeat(0) }
+    rule(:key_group_name) { key.as(:key) >> (str(".") >> key.as(:key)).repeat }
 
     rule(:comment_line) { comment >> str("\n") >> all_space }
-    rule(:comment) { str("#") >> match("[^\n]").repeat(0) }
+    rule(:comment) { str("#") >> match("[^\n]").repeat }
 
-    rule(:space) { match("[ \t]").repeat(0) }
-    rule(:all_space) { match("[ \t\r\n]").repeat(0) }
+    rule(:space) { match("[ \t]").repeat }
+    rule(:all_space) { match("[ \t\r\n]").repeat }
         
     rule(:string) {
       str('"') >> (
       match("[^\"\\\\]") |
       (str("\\") >> match("[0tnr\"\\\\]"))
-      ).repeat(0).as(:string) >> str('"')
+      ).repeat.as(:string) >> str('"')
     }
     
     rule(:sign) { str("-") }
     rule(:sign?) { sign.maybe }
     
     rule(:integer) {
-      str("0") | (sign? >> match("[1-9]") >> match("[0-9]").repeat(0))
+      str("0") | (sign? >> match("[1-9]") >> match("[0-9]").repeat)
     }
     rule(:float) {
       sign? >> match("[0-9]").repeat(1) >> str(".") >> match("[0-9]").repeat(1)
