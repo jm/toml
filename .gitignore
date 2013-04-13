@@ -1,3 +1,4 @@
 pkg/*
 test.*
 Gemfile.lock
+.DS_Store
