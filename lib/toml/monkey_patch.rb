@@ -19,3 +19,8 @@ class Array
     "[" + self.map {|v| v.to_toml }.join(",") + "]"
   end
 end
+class DateTime
+  def to_toml
+    self.to_time.utc.strftime("%Y-%m-%dT%H:%M:%SZ")
+  end
+end

@@ -18,16 +18,23 @@ class TestGenerator < MiniTest::Unit::TestCase
         "group" => {
           "value" => "lol"
         }
-      }
+      },
+      "date" => DateTime.now
     }
     
   end
   
   def test_generator
-    body = TOML::Generator.new(@doc).body
+    doc = @doc.clone
+    body = TOML::Generator.new(doc).body
 
     doc_parsed = TOML::Parser.new(body).parsed
     
-    assert_equal @doc, doc_parsed
+    # Extracting dates since Ruby's DateTime equality testing sucks.
+    original_date = doc.delete "date"
+    parsed_date = doc_parsed.delete "date"
+    
+    assert_equal doc, doc_parsed
+    assert_equal original_date.to_time.to_s, parsed_date.to_time.to_s
   end
 end

@@ -5,7 +5,7 @@ module TOML
     def initialize(markup)
       # Make sure we have a newline on the end
       markup += "\n" unless markup.end_with?("\n")
-
+      
       begin
         tree = Parslet.new.parse(markup)
       rescue Parslet::ParseFailed => failure
