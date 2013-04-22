@@ -47,6 +47,13 @@ multiline = [
 	3
 ]
 
+# Multiline array
+multiline_trailing_comma = [
+	1,
+	2,
+	3,
+]
+
 # With comments
 multiline_comments = [ # 0
 	1, # 1

@@ -52,11 +52,15 @@ class TestParser < MiniTest::Unit::TestCase
   def test_multiline_arrays
     assert_equal ["lines", "are", "super", "cool", "lol", "amirite"], @doc["arrays"]["multi"]
   end
-  
+
   def test_multiline_array
     assert_equal @doc["arrays"]["multiline"], [1, 2, 3]
   end
-  
+
+  def test_multiline_array_with_trailing_comma
+    assert_equal @doc["arrays"]["multiline_trailing_comma"], [1, 2, 3]
+  end
+
   def test_multiline_array_with_comments
     assert_equal @doc["arrays"]["multiline_comments"], [1, 2, 3]
   end
