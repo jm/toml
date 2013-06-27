@@ -34,10 +34,10 @@ module TOML
     }
     
     rule(:key_value) { 
-      space >> key.as(:key) >>
-      space >> str("=") >>
-      space >> value.as(:value) >>
-      space >> comment.maybe >> str("\n") >> all_space
+      space.maybe >> key.as(:key) >>
+      space.maybe >> str("=") >>
+      space.maybe >> value.as(:value) >>
+      space.maybe >> comment.maybe >> str("\n") >> all_space
     }
     rule(:key_group) {
       space >> str("[") >>
