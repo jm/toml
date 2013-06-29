@@ -36,6 +36,11 @@ module TOML
     # Clean up arrays
     # rule(:array => subtree(:ar)) { ar.is_a?(Array) ? ar : [ar] }
     
+    # Empty file
+    rule('') {
+      nil
+    }
+
     # Clean up simple value hashes
     rule(:integer => simple(:i)) { i.to_i }
     rule(:float => simple(:f)) { f.to_f }
