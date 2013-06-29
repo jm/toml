@@ -57,6 +57,10 @@ class TestParser < MiniTest::Unit::TestCase
     assert_equal [], @doc["arrays"]["multiline_empty"]
   end
 
+  def test_empty_multiline_array_with_comment
+    assert_equal [], @doc["arrays"]["multiline_empty_comment"]
+  end
+
   def test_multiline_arrays
     assert_equal ["lines", "are", "super", "cool", "lol", "amirite"], @doc["arrays"]["multi"]
   end

@@ -47,6 +47,11 @@ empty = []
 multiline_empty = [
 ]
 
+# Multiline empty with comment
+multiline_empty_comment = [
+  # You look nice today
+]
+
 # Multiline array
 multiline = [
 	1,
