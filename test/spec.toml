@@ -40,6 +40,13 @@ simple = [1, 2, 3]
 # Nested array
 nested = [[1, 2], [3]]
 
+# Empty array
+empty = []
+
+# Multiline empty
+multiline_empty = [
+]
+
 # Multiline array
 multiline = [
 	1,

@@ -49,6 +49,14 @@ class TestParser < MiniTest::Unit::TestCase
     assert_equal [[1, 2], [3]], @doc["arrays"]["nested"]
   end
 
+  def test_empty_array
+    assert_equal [], @doc["arrays"]["empty"]
+  end
+
+  def test_empty_multiline_array
+    assert_equal [], @doc["arrays"]["multiline_empty"]
+  end
+
   def test_multiline_arrays
     assert_equal ["lines", "are", "super", "cool", "lol", "amirite"], @doc["arrays"]["multi"]
   end

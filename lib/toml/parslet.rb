@@ -21,7 +21,7 @@ module TOML
     rule(:array_comments) { (all_space >> comment_line).repeat }
     
     rule(:array) {
-      str("[") >> ( array_comments >> # Match any comments on first line
+      str("[") >> all_space >> ( array_comments >> # Match any comments on first line
         all_space >> value >> array_comments >>
         (
           # Separator followed by any comments
