@@ -40,10 +40,10 @@ module TOML
       space.maybe >> comment.maybe >> str("\n") >> all_space
     }
     rule(:key_group) {
-      space >> str("[") >>
+      space.maybe >> str("[") >>
         key_group_name.as(:key_group) >>
       str("]") >>
-      space >> comment.maybe >> str("\n") >> all_space
+      space.maybe >> comment.maybe >> str("\n") >> all_space
     }
     
     rule(:key) { match["^. \t\\]"].repeat(1) }
@@ -53,7 +53,7 @@ module TOML
     rule(:comment) { str("#") >> match["^\n"].repeat }
 
     rule(:space) { match[" \t"].repeat }
-    rule(:all_space) { match[" \t\r\n"].repeat }
+    rule(:all_space) { (match[" \t\r\n"].repeat).maybe }
         
     rule(:string) {
       str('"') >> (
