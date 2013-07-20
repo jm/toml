@@ -29,6 +29,7 @@ module TOML
           # Value followed by any comments
           all_space >> value >> array_comments
         ).repeat >>
+        (all_space >> str(",")).maybe >> # possible trailing comma
         all_space >> array_comments # Grab any remaining comments just in case
       ).maybe.as(:array) >> str("]") 
     }
