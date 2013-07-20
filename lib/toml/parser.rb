@@ -4,16 +4,16 @@ module TOML
 
     def initialize(markup)
       # Make sure we have a newline on the end
-      markup += "\n" unless markup.end_with?("\n")
       
+      markup += "\n" unless markup.end_with?("\n") || markup.length == 0
       begin
         tree = Parslet.new.parse(markup)
       rescue Parslet::ParseFailed => failure
         puts failure.cause.ascii_tree
       end
       
-      parts = Transformer.new.apply(tree)
       
+      parts = Transformer.new.apply(tree) || []
       @parsed = {}
       @current = @parsed
       @current_path = ''
