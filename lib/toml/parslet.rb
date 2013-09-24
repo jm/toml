@@ -2,7 +2,7 @@ module TOML
   class Parslet < ::Parslet::Parser
     rule(:document) {
       all_space >>
-      (table | key_value | comment_line).repeat >>
+      (table | key_value | comment_line | table_array).repeat >>
       all_space
     }
     root :document
@@ -38,6 +38,10 @@ module TOML
       space.maybe >> str("=") >>
       space.maybe >> value.as(:value) >>
       space.maybe >> comment.maybe >> str("\n") >> all_space
+    }
+    rule(:table_array) {
+      (space.maybe >> str("[[") >> table_name >> str("]]") >>
+      comment.maybe >> str("\n") >> key_value.repeat.as(:keys)).repeat(1)
     }
     rule(:table) {
       space.maybe >> str("[") >>
