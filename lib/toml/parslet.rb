@@ -41,7 +41,7 @@ module TOML
     }
     rule(:table_array) {
       (space.maybe >> str("[[") >> table_name >> str("]]") >>
-      comment.maybe >> str("\n") >> key_value.repeat.as(:keys)).repeat(1)
+      comment.maybe >> str("\n") >> key_value.repeat.as(:keys)).repeat(1).as(:tables)
     }
     rule(:table) {
       space.maybe >> str("[") >>
