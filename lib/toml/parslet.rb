@@ -2,7 +2,7 @@ module TOML
   class Parslet < ::Parslet::Parser
     rule(:document) {
       all_space >>
-      (key_group | key_value | comment_line | table_array).repeat >>
+      (key_group | key_value | comment_line | key_group_array).repeat >>
       all_space
     }
     root :document
