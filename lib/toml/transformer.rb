@@ -101,5 +101,8 @@ module TOML
     rule(:key_group => subtree(:kg)) {
       KeyGroup.new(kg.map &:to_s)
     }
+    rule(:key_group_array => subtree(:kga) {
+      raise NotImplementedError
+    }
   end
 end

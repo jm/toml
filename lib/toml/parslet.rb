@@ -2,7 +2,7 @@ module TOML
   class Parslet < ::Parslet::Parser
     rule(:document) {
       all_space >>
-      (key_group | key_value | comment_line).repeat >>
+      (key_group | key_value | comment_line | key_group_array).repeat >>
       all_space
     }
     root :document
@@ -36,16 +36,20 @@ module TOML
     }
     
     rule(:key_value) { 
-      space >> key.as(:key) >>
-      space >> str("=") >>
-      space >> value.as(:value) >>
-      space >> comment.maybe >> str("\n") >> all_space
+      space.maybe >> key.as(:key) >>
+      space.maybe >> str("=") >>
+      space.maybe >> value.as(:value) >>
+      space.maybe >> comment.maybe >> str("\n") >> all_space
+    }
+    rule(:key_group_array) {
+      (space.maybe >> str("[[") >> key_group_name.as(:key_group_name) >> str("]]") >>
+      comment.maybe >> str("\n") >> key_value.repeat.as(:keys)).repeat(1).as(:key_groups)
     }
     rule(:key_group) {
-      space >> str("[") >>
+      space.maybe >> str("[") >>
         key_group_name.as(:key_group) >>
       str("]") >>
-      space >> comment.maybe >> str("\n") >> all_space
+      space.maybe >> comment.maybe >> str("\n") >> all_space
     }
     
     rule(:key) { match["^. \t\\]"].repeat(1) }
@@ -55,7 +59,7 @@ module TOML
     rule(:comment) { str("#") >> match["^\n"].repeat }
 
     rule(:space) { match[" \t"].repeat }
-    rule(:all_space) { match[" \t\r\n"].repeat }
+    rule(:all_space) { (match[" \t\r\n"].repeat).maybe }
         
     rule(:string) {
       str('"') >> (
