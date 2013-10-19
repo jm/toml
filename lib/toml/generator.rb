@@ -48,6 +48,9 @@ module TOML
       end
       other_pairs.each do |pair|
         key, val = pair
+        if key.include? '.'
+          raise SyntaxError, "Periods are not allowed in keys (failed on key: #{key.inspect})"
+        end
         @body += "#{key} = #{format(val)}\n"
       end
       @body += "\n" unless other_pairs.empty?
