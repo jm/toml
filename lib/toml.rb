@@ -5,7 +5,6 @@ require 'parslet'
 
 require 'toml/key'
 require 'toml/table'
-require 'toml/key_group'
 require 'toml/parslet'
 require 'toml/transformer'
 require 'toml/parser'
@@ -15,7 +14,7 @@ require 'toml/generator'
 # require 'toml/monkey_patch
 
 module TOML
-  VERSION = '0.0.4'
+  VERSION = '0.1.0'
 
   def self.load(content)
     Parser.new(content).parsed

@@ -63,9 +63,15 @@ task :coverage do
     Bundler.setup(:test)
     require 'simplecov'
     require 'simplecov-gem-adapter'
+    
+    sh "rm -fr coverage"
     SimpleCov.command_name 'Unit Tests'
     SimpleCov.start 'gem'
     Rake::Task[:test].invoke
+    SimpleCov.at_exit do
+      SimpleCov.result.format!
+      sh "open coverage/index.html"
+    end
   else
     require 'rcov'
     sh "rm -fr coverage"
