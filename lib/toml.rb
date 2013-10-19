@@ -4,6 +4,7 @@ require 'time'
 require 'parslet'
 
 require 'toml/key'
+require 'toml/table'
 require 'toml/key_group'
 require 'toml/parslet'
 require 'toml/transformer'
