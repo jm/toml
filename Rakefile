@@ -45,19 +45,33 @@ end
 
 task :default => :test
 
-require 'rake/testtask'
-Rake::TestTask.new(:test) do |test|
-  test.libs << 'lib' << 'test'
-  test.pattern = 'test/**/test_*.rb'
-  test.verbose = true
+# require 'rake/testtask'
+# Rake::TestTask.new(:test) do |test|
+#   test.libs << 'lib' << 'test'
+#   test.pattern = 'test/**/test_*.rb'
+#   test.verbose = true
+# end
+task :test do
+  Dir['./test/**/test_*.rb'].each {|f| require f }
 end
 
 desc "Generate RCov test coverage and open in your browser"
 task :coverage do
-  require 'rcov'
-  sh "rm -fr coverage"
-  sh "rcov test/test_*.rb"
-  sh "open coverage/index.html"
+  if RUBY_VERSION =~ /^1\./
+    require 'rubygems'
+    require 'bundler'
+    Bundler.setup(:test)
+    require 'simplecov'
+    require 'simplecov-gem-adapter'
+    SimpleCov.command_name 'Unit Tests'
+    SimpleCov.start 'gem'
+    Rake::Task[:test].invoke
+  else
+    require 'rcov'
+    sh "rm -fr coverage"
+    sh "rcov test/test_*.rb"
+    sh "open coverage/index.html"
+  end
 end
 
 require 'rdoc/task'
