@@ -5,7 +5,7 @@ require 'bundler/setup'
 require 'toml'
 require 'minitest/autorun'
 
-class TestParser < MiniTest::Unit::TestCase
+class TestParser < MiniTest::Test
   def setup
     filepath = File.join(File.dirname(__FILE__), 'spec.toml')
     @doc = TOML::Parser.new(File.read(filepath)).parsed

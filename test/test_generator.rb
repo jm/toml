@@ -5,7 +5,7 @@ require 'bundler/setup'
 require 'toml'
 require 'minitest/autorun'
 
-class TestGenerator < MiniTest::Unit::TestCase
+class TestGenerator < MiniTest::Test
   def setup
     @doc = {
       "integer" => 1,
