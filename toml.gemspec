@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
   ## the sub! line in the Rakefile
   s.name              = 'toml'
   s.version           = '0.1.0'
-  s.date              = '2013-10-19'
+  s.date              = '2013-12-05'
 
   ## Make sure your summary is short. The description may be as long
   ## as you like.
