@@ -38,6 +38,8 @@ Gem::Specification.new do |s|
   s.extra_rdoc_files = %w[README.md LICENSE]
   
   s.add_dependency "parslet", "~> 1.5.0"
+
+  s.add_development_dependency "rake"
   
   ## Leave this section as-is. It will be automatically generated from the
   ## contents of your Git repository via the gemspec task. DO NOT REMOVE
