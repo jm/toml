@@ -59,6 +59,9 @@ Gem::Specification.new do |s|
     lib/toml/parslet.rb
     lib/toml/table.rb
     lib/toml/transformer.rb
+    script/bootstrap
+    script/cibuild
+    script/console
     test/empty.toml
     test/hard_example.toml
     test/spec.toml
