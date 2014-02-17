@@ -17,9 +17,11 @@ class TestGenerator < MiniTest::Test
       "key" => {
         "group" => {
           "value" => "lol"
-        }
+        },
+        "nil_table" => {}
       },
-      "date" => DateTime.now
+      "date" => DateTime.now,
+      "nil" => nil
     }
     
   end
@@ -33,6 +35,9 @@ class TestGenerator < MiniTest::Test
     # Extracting dates since Ruby's DateTime equality testing sucks.
     original_date = doc.delete "date"
     parsed_date = doc_parsed.delete "date"
+    
+    # removing the nil value
+    remove_nil = doc.delete "nil"
     
     assert_equal doc, doc_parsed
     assert_equal original_date.to_time.to_s, parsed_date.to_time.to_s
