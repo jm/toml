@@ -51,14 +51,20 @@ module TOML
         if key.include? '.'
           raise SyntaxError, "Periods are not allowed in keys (failed on key: #{key.inspect})"
         end
-        @body += "#{key} = #{format(val)}\n"
+        unless val.nil?
+          @body += "#{key} = #{format(val)}\n"
+        end
       end
       @body += "\n" unless other_pairs.empty?
       
       # Then deal with sub-hashes
       hash_pairs.each do |pair|
         key, hash = pair
-        visit(hash, (path.empty? ? key : [path, key].join(".")))
+        if hash.empty?
+          @body += "[#{path.empty? ? key : [path, key].join(".")}]\n"
+        else
+          visit(hash, (path.empty? ? key : [path, key].join(".")))
+        end
       end
     end#visit
     
