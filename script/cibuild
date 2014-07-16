@@ -1,3 +1,4 @@
 #! /bin/bash
 
-bundle exec rake test
+time bundle exec rake test
+time toml-test test/toml-test-interface.rb
