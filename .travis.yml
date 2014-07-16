@@ -3,4 +3,5 @@ rvm:
 - 2.1
 - 2.0
 - 1.9.3
+install: travis_retry script/bootstrap
 script: script/cibuild

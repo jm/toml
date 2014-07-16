@@ -2,7 +2,7 @@
 
 set -e
 
-bundle install
+bundle install --jobs=3 --retry=3
 echo
 
 go version
