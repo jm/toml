@@ -1,23 +1,23 @@
-module TOML  
+module TOML
   class Parser
     attr_reader :parsed
 
     def initialize(markup)
       # Make sure we have a newline on the end
-      
+
       markup += "\n" unless markup.end_with?("\n") || markup.length == 0
       begin
         tree = Parslet.new.parse(markup)
       rescue Parslet::ParseFailed => failure
         puts failure.cause.ascii_tree
       end
-      
-      
+
+
       parts = Transformer.new.apply(tree) || []
       @parsed = {}
       @current = @parsed
       @current_path = ''
-      
+
       parts.each do |part|
         if part.is_a? Key
           # If @current is an array then we're in a key-group
@@ -47,7 +47,7 @@ module TOML
         end
       end
     end
-    
+
     def resolve_table_array(t)
       @current = @parsed
       path = t.name.dup
@@ -55,7 +55,7 @@ module TOML
       while n = path.shift
         # If it's a table-array then get the last item.
         @current = @current.last if @current.is_a? Array
-        
+
         # If it's the last item:
         if path.length == 0
           # If the current table has an item:
@@ -79,7 +79,7 @@ module TOML
         @current = @current[n]
       end
     end
-    
+
     def resolve_table(t)
       @current = @parsed
 
@@ -94,6 +94,6 @@ module TOML
         @current = @current[k]
       end
     end#/resolve_key_group
-    
+
   end
 end
