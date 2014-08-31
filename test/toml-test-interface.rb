@@ -1,7 +1,25 @@
+#!/usr/bin/env ruby
+
+def prelude
+  [
+    "=" * 60,
+    Time.new.to_s,
+    "=" * 60
+  ].join("\n")
+end
+
+def log(txt)
+  File.open("run_log.txt", "a") {|f| f.puts(prelude);f.write(txt) }
+end
+
+require "bundler"
+Bundler.require
+
 require "toml"
 require "json"
 
 raw = ARGF.read
+log(raw)
 begin
   decoded = TOML.load(raw)
 rescue

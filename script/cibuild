@@ -3,4 +3,4 @@
 set -x
 
 time bundle exec rake test
-#time toml-test test/toml-test-interface.sh
+time toml-test "test/toml-test-interface.rb"
