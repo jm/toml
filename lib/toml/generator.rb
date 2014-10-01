@@ -8,10 +8,8 @@ module TOML
       # used by TOML.
       self.class.inject!
       
-      @body = ""
       @doc = doc
-      
-      visit(@doc)
+      @body = doc.to_toml
       
       return @body
     end
@@ -27,51 +25,5 @@ module TOML
       require 'toml/monkey_patch'
       @@injected = true
     end
-    
-    def visit(hash, path = "")
-      hash_pairs = [] # Sub-hashes
-      other_pairs = []
-      
-      hash.keys.sort.each do |key|
-        val = hash[key]
-        # TODO: Refactor for other hash-likes (OrderedHash)
-        if val.is_a? Hash
-          hash_pairs << [key, val]
-        else
-          other_pairs << [key, val]
-        end
-      end
-      
-      # Handle all the key-values
-      if !path.empty? && !other_pairs.empty?
-        @body += "[#{path}]\n"
-      end
-      other_pairs.each do |pair|
-        key, val = pair
-        if key.include? '.'
-          raise SyntaxError, "Periods are not allowed in keys (failed on key: #{key.inspect})"
-        end
-        unless val.nil?
-          @body += "#{key} = #{format(val)}\n"
-        end
-      end
-      @body += "\n" unless other_pairs.empty?
-      
-      # Then deal with sub-hashes
-      hash_pairs.each do |pair|
-        key, hash = pair
-        if hash.empty?
-          @body += "[#{path.empty? ? key : [path, key].join(".")}]\n"
-        else
-          visit(hash, (path.empty? ? key : [path, key].join(".")))
-        end
-      end
-    end#visit
-    
-    # Returns the value formatted for TOML.
-    def format(val)
-      val.to_toml
-    end
-    
   end#Generator
 end#TOML
