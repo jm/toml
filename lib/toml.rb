@@ -3,6 +3,7 @@ $:.unshift(File.dirname(__FILE__))
 require 'time'
 require 'parslet'
 
+require 'toml/version'
 require 'toml/key'
 require 'toml/table'
 require 'toml/parslet'
@@ -14,8 +15,6 @@ require 'toml/generator'
 # require 'toml/monkey_patch
 
 module TOML
-  VERSION = '0.1.1'
-
   def self.load(content)
     Parser.new(content).parsed
   end
