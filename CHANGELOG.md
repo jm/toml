@@ -1,4 +1,4 @@
-## HEAD
+## 0.1.2 / 2014-10-16
 
 - Add support for `CR` and `CRLF` newlines (#13)
 - Add support for generating TOML from Ruby `Hash`es (#36)
