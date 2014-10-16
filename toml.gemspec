@@ -1,4 +1,4 @@
-require_relative 'lib/toml/version'
+require './lib/toml/version'
 
 Gem::Specification.new do |s|
   s.specification_version = 2 if s.respond_to? :specification_version=

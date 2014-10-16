@@ -3,7 +3,7 @@
 # This is an interface for: https://github.com/BurntSushi/toml-test
 
 require 'json'
-require_relative '../lib/toml'
+require '../lib/toml'
 
 def toml_test_to_ruby(toml_obj)
   if toml_obj.kind_of?(Array)

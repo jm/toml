@@ -3,7 +3,7 @@
 # This is an interface for: https://github.com/BurntSushi/toml-test
 
 require 'json'
-require_relative '../lib/toml'
+require '../lib/toml'
 
 # This converts a ruby obj to an obj that can be ran through the json encoder
 # to create json for toml-test.

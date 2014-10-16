@@ -2,7 +2,7 @@ require 'rubygems'
 require 'bundler/gem_tasks'
 require 'rake'
 require 'date'
-require_relative 'lib/toml/version'
+require './lib/toml/version'
 
 #############################################################################
 #
