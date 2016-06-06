@@ -26,7 +26,7 @@ Gem::Specification.new do |s|
   s.rdoc_options = ["--charset=UTF-8"]
   s.extra_rdoc_files = %w[README.md LICENSE CHANGELOG.md]
 
-  s.add_dependency "parslet", "~> 1.6.2"
+  s.add_dependency "parslet", "~> 1.7.1"
 
   s.add_development_dependency "rake"
 
