@@ -24,12 +24,29 @@ class TestParser < MiniTest::Test
     assert_equal -42, @doc["ints"]["negative"]
   end
 
+  def test_underscored_integer
+    assert_equal 230_0_0, @doc["ints"]["simple_underscored"]
+    assert_equal 10_000_000_010, @doc["ints"]["long_underscored"]
+  end
+
+  def test_negative_underscored_integer
+    assert_equal -10_0_0, @doc["ints"]["negative_underscored"]
+  end
+
   def test_float
     assert_equal 3.14159, @doc["floats"]["pi"]
   end
 
   def test_negative_float
     assert_equal -10.0, @doc["floats"]["negative"]
+  end
+
+  def test_underscored_float
+    assert_equal 300.14159, @doc["floats"]["underscored_pi"]
+  end
+
+  def test_negative_underscored_float
+    assert_equal -10.09, @doc["floats"]["underscored_negative"]
   end
 
   def test_datetime
