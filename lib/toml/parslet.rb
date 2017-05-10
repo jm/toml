@@ -75,10 +75,13 @@ module TOML
     rule(:sign?) { sign.maybe }
     
     rule(:integer) {
-      str("0") | (sign? >> match["1-9"] >> match["0-9"].repeat)
+      str("0") | sign? >>
+      (match["1-9"] >> (match["_"].maybe >> match["0-9"]).repeat)
     }
     rule(:float) {
-      sign? >> match["0-9"].repeat(1) >> str(".") >> match["0-9"].repeat(1)
+      sign? >>
+      (match["0-9"] >> (match["_"].maybe >> match["0-9"]).repeat) >> str(".") >>
+      (match["0-9"] >> (match["_"].maybe >> match["0-9"]).repeat)
     }
 
     rule(:boolean) { str("true").as(:true) | str("false").as(:false) }
