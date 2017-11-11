@@ -92,23 +92,24 @@ module TOML
     # Make key hashes (inside key_groups) just be strings
     rule(:key => simple(:k)) { k }
 
-    # Then objectify the key_groups
-    rule(:table => simple(:kg)) {
-      Table.new([kg.to_s])
-    }
-
     # Captures array-like key-groups
     rule(:table => subtree(:kg)) {
       Table.new(kg.map &:to_s)
     }
-    
-    # Single name table-arrays
-    rule(:table_array => simple(:name)) {
-      TableArray.new([name.to_s])
+
+     # Then objectify the key_groups
+    rule(:table => simple(:kg)) {
+      Table.new([kg.to_s])
     }
+    
     # Multi-part (a.b.c) table-arrays
     rule(:table_array => subtree(:names)) {
       TableArray.new(names.map &:to_s)
+    }
+
+    # Single name table-arrays
+    rule(:table_array => simple(:name)) {
+      TableArray.new([name.to_s])
     }
   end
 end
