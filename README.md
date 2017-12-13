@@ -1,17 +1,17 @@
 # TOML
 
-A sane configuration format from @mojombo.  More information here: https://github.com/mojombo/toml
+A Ruby parser for [TOML](https://github.com/mojombo/toml), built on [parslet](https://github.com/kschiess/parslet).
 
 This is far superior to YAML and JSON because it doesn't suck.  Really it doesn't.
 
-**There is a bug in Rails 2.3's vendored version of BlankSlate (a dependency of Parslet which is used for parsing TOML) that breaks Parslet; please see this [Gist](https://gist.github.com/dirk/5264004) for a workaround.**
+[![Gem Version](https://badge.fury.io/rb/toml.svg)](http://badge.fury.io/rb/toml)
 
 ## Usage
 
-Add to your Gemfile:
+Install this library:
 
-```ruby
-gem "toml", "~> 0.0.3"
+```bash
+gem install "toml"
 ```
 
 It's simple, really.
