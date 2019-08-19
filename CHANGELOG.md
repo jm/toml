@@ -1,3 +1,7 @@
+## HEAD
+
+- Fix "undefined method `ascii_tree' for nil:NilClass" when printing parse error
+
 ## 0.1.2 / 2014-10-16
 
 - Add support for `CR` and `CRLF` newlines (#13)
