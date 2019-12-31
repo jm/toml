@@ -38,6 +38,8 @@ TOML.load_file("my_file.toml")
 # => {"whatever" => "keys"}
 ```
 
+In case a syntax error occurs, the parser will raise a `Parslet::ParseFailed` exception.
+
 There's also a beta feature for generating a TOML file from a Ruby hash. Please note this will likely not give beautiful output right now.
 
 ```ruby
