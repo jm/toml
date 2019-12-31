@@ -82,6 +82,6 @@ class Numeric
 end
 class DateTime
   def to_toml(path = "")
-    self.to_time.utc.strftime("%Y-%m-%dT%H:%M:%SZ")
+    self.rfc3339
   end
 end

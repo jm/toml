@@ -11,6 +11,7 @@ module TOML
       array |
       string |
       datetime.as(:datetime) |
+      datetime_rfc3339.as(:datetime_rfc3339) |
       float.as(:float) |
       integer.as(:integer) |
       boolean
@@ -98,6 +99,16 @@ module TOML
       match["0-9"].repeat(2,2)
     }
 
+    rule(:timezone) {
+      match["0-9"].repeat(2,2) >> str(":") >>
+      match["0-9"].repeat(2,2)
+    }
+
     rule(:datetime) { date >> str("T") >> time >> str("Z") }
+
+    rule(:datetime_rfc3339) {
+      # rfc3339 section 5.6 allows replacing 'T' with a space.
+      date >> (str("T") | str(" ")) >> time >> (str("+") | str("-")) >> timezone
+    }
   end
 end

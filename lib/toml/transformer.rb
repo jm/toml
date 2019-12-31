@@ -52,6 +52,7 @@ module TOML
       ""
     }
     rule(:datetime => simple(:d)) { DateTime.iso8601(d) }
+    rule(:datetime_rfc3339 => simple(:d)) { DateTime.rfc3339(d) }
     rule(:true => simple(:b)) { true }
     rule(:false => simple(:b)) { false }
     
