@@ -39,23 +39,23 @@ class TestGenerator < MiniTest::Test
       "date" => DateTime.now,
       "nil" => nil
     }
-    
+
   end
-  
+
   def test_generator
     doc = @doc.clone
     body = TOML::Generator.new(doc).body
 
     doc_parsed = TOML::Parser.new(body).parsed
-    
+
     # removing the nil value
     remove_nil = doc.delete "nil"
     remove_nil_table = doc["key"].delete "nil_table"
-    
+
     # Extracting dates since Ruby's DateTime equality testing sucks.
     original_date = doc.delete "date"
     parsed_date = doc_parsed.delete "date"
-    assert_equal original_date.to_time.to_s, parsed_date.to_time.to_s
+    assert_equal original_date.to_time.utc.to_s, parsed_date.to_time.utc.to_s
 
     refute doc_parsed.length > doc.length, "Parsed doc has more items than we started with."
     doc.each do |key, val|
