@@ -9,7 +9,7 @@ This is far superior to YAML and JSON because it doesn't suck.  Really it doesn'
 Add to your Gemfile:
 
 ```ruby
-gem "toml", "~> 0.0.3"
+gem "toml", "~> 0.3.0"
 ```
 
 It's simple, really.
