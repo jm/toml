@@ -2,7 +2,7 @@ module TOML
   class Parslet < ::Parslet::Parser
     rule(:document) {
       all_space >>
-      (table | table_array | key_value | comment_line).repeat >>
+      (comment_line | table | table_array | key_value).repeat >>
       all_space
     }
     root :document
@@ -15,11 +15,11 @@ module TOML
       integer.as(:integer) |
       boolean
     }
-    
+
     # Finding comments in multiline arrays requires accepting a bunch of
     # possible newlines and stuff before the comment
     rule(:array_comments) { (all_space >> comment_line).repeat }
-    
+
     rule(:array) {
       str("[") >> all_space >> array_comments >>
       ( array_comments >> # Match any comments on first line
@@ -32,10 +32,10 @@ module TOML
         ).repeat >>
         (all_space >> str(",")).maybe >> # possible trailing comma
         all_space >> array_comments # Grab any remaining comments just in case
-      ).maybe.as(:array) >> str("]") 
+      ).maybe.as(:array) >> str("]")
     }
-    
-    rule(:key_value) { 
+
+    rule(:key_value) {
       space >> key.as(:key) >>
       space >> str("=") >>
       space >> value.as(:value) >>
@@ -53,7 +53,7 @@ module TOML
       str("]]") >>
       space >> comment.maybe >> str("\n") >> all_space
     }
-    
+
     rule(:key) { match["^. \t\\]"].repeat(1) }
     rule(:table_name) { key.as(:key) >> (str(".") >> key.as(:key)).repeat }
 
@@ -63,17 +63,17 @@ module TOML
     rule(:space) { match[" \t"].repeat }
     rule(:all_space) { match[" \t\r\n"].repeat }
     rule(:newline) { str("\r").maybe >> str("\n") | str("\r") >> str("\n").maybe }
-        
+
     rule(:string) {
       str('"') >> (
       match["^\"\\\\"] |
       (str("\\") >> match["0tnr\"\\\\"])
       ).repeat.as(:string) >> str('"')
     }
-    
+
     rule(:sign) { str("-") }
     rule(:sign?) { sign.maybe }
-    
+
     rule(:integer) {
       str("0") | sign? >>
       (match["1-9"] >> (match["_"].maybe >> match["0-9"]).repeat)
@@ -85,7 +85,7 @@ module TOML
     }
 
     rule(:boolean) { str("true").as(:true) | str("false").as(:false) }
-    
+
     rule(:date) {
       match["0-9"].repeat(4,4) >> str("-") >>
       match["0-9"].repeat(2,2) >> str("-") >>

@@ -105,4 +105,8 @@ class TestParser < MiniTest::Test
   def test_inline_comment
     assert_equal "a line", @doc["comments"]["on"]
   end
+
+  def test_bare_key_with_comment_prefixed
+    assert_nil @doc["comments"]["#nospacecomment"]
+  end
 end
