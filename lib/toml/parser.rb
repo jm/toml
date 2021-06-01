@@ -9,7 +9,7 @@ module TOML
       begin
         tree = Parslet.new.parse(markup)
       rescue Parslet::ParseFailed => failure
-        puts failure.cause.ascii_tree
+        puts failure.parse_failure_cause.ascii_tree
       end
       
       

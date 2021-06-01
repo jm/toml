@@ -1,5 +1,6 @@
 ## 0.3.0 / 2020-06-09
 
+- Fix "undefined method `ascii_tree' for nil:NilClass" when printing parse error
 - Fixes TOML to work with version 2.0 of Parslet
 
 ## 0.2.0 / 2017-11-11
