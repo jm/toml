@@ -4,22 +4,18 @@ A Ruby parser for [TOML](https://github.com/mojombo/toml), built on [parslet](ht
 
 This is far superior to YAML and JSON because it doesn't suck.  Really it doesn't.
 
-<<<<<<< HEAD
-=======
 [![Gem Version](https://badge.fury.io/rb/toml.svg)](http://badge.fury.io/rb/toml)
 
->>>>>>> Update README
 ## Usage
 
 Install this library:
 
-<<<<<<< HEAD
 ```ruby
 gem "toml", "~> 0.3.0"
-=======
+```
+
 ```bash
 gem install "toml"
->>>>>>> Update README
 ```
 
 It's simple, really.
@@ -72,4 +68,4 @@ doc = TOML::Generator.new(hash).body
 
 ## Contributors
 
-Written by Jeremy McAnally (@jm) and Dirk Gadsden (@dirk) based on TOML from Tom Preston-Werner (@mojombo).
+Written by Jeremy McAnally ([@jm](https://github.com/jm)) and Dirk Gadsden ([@dirk](https://github.com/dirk)) based on TOML from Tom Preston-Werner ([@mojombo](https://github.com/mojombo)).
