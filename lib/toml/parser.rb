@@ -6,13 +6,8 @@ module TOML
       # Make sure we have a newline on the end
       
       markup += "\n" unless markup.end_with?("\n") || markup.length == 0
-      begin
-        tree = Parslet.new.parse(markup)
-      rescue Parslet::ParseFailed => failure
-        puts failure.parse_failure_cause.ascii_tree
-      end
-      
-      
+      tree = Parslet.new.parse(markup)
+
       parts = Transformer.new.apply(tree) || []
       @parsed = {}
       @current = @parsed
