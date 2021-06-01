@@ -34,9 +34,13 @@ d = "test"
 [e]
 f = "test"
 
-# Post line comment
+
 [comments]
+# Post line comment
 on = "a line" # with markup
+# Comment symbols prefixing bare keys are comment lines
+#nospacecomment = "this should not be parsed"
+
 
 # Multi-line arrays
 [arrays]
