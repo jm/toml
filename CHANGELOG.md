@@ -1,3 +1,13 @@
+## 0.3.0 / 2020-06-09
+
+- Fix "undefined method `ascii_tree' for nil:NilClass" when printing parse error
+- Fixes TOML to work with version 2.0 of Parslet
+
+## 0.2.0 / 2017-11-11
+
+- Add support for underscored Integers and Floats
+- Fixes TOML to work with version 1.8.0 of Parslet
+
 ## 0.1.2 / 2014-10-16
 
 - Add support for `CR` and `CRLF` newlines (#13)
