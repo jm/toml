@@ -1,9 +1,8 @@
+require "rubygems"
+require "bundler/setup"
 
-require 'rubygems'
-require 'bundler/setup'
-
-require 'toml'
-require 'minitest/autorun'
+require "toml"
+require "minitest/autorun"
 
 class TestGenerator < MiniTest::Test
   def setup
@@ -22,7 +21,7 @@ class TestGenerator < MiniTest::Test
           "name" => "second",
           "sub_table_array" => [
             {
-              "sub_name" => "sub first",
+              "sub_name" => "sub first"
             },
             {
               "sub_name" => "sub second"
@@ -39,7 +38,6 @@ class TestGenerator < MiniTest::Test
       "date" => DateTime.now,
       "nil" => nil
     }
-
   end
 
   def test_generator
@@ -61,5 +59,10 @@ class TestGenerator < MiniTest::Test
     doc.each do |key, val|
       assert_equal val, doc_parsed[key]
     end
+
+    # Test preserving the structure
+    body = TOML::Generator.new(doc, true).body
+    refute body.split.first != "integer", "The first entry in the generated TOML string is not 'integer' (as per @doc)."
+    assert_equal body.split.first, "integer"
   end
 end

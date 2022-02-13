@@ -1,26 +1,41 @@
 # Adds to_toml methods to base Ruby classes used by the generator.
 class Object
   def toml_table?
-    self.kind_of?(Hash)
+    is_a?(Hash)
   end
+
   def toml_table_array?
-    self.kind_of?(Array) && self.first.toml_table?
+    is_a?(Array) && first.toml_table?
   end
 end
+
 class Hash
-  def to_toml(path = "")
-    return "" if self.empty?
+  def to_toml(path = "", preserve = false)
+    return "" if empty?
 
     tables = {}
     values = {}
-    self.keys.sort.each do |key|
-      val = self[key]
-      if val.kind_of?(NilClass)
-        next
-      elsif val.toml_table? || val.toml_table_array?
-        tables[key] = val
-      else
-        values[key] = val
+    if preserve
+      keys.each do |key|
+        val = self[key]
+        if val.is_a?(NilClass)
+          next
+        elsif val.toml_table? || val.toml_table_array?
+          tables[key] = val
+        else
+          values[key] = val
+        end
+      end
+    else
+      keys.sort.each do |key|
+        val = self[key]
+        if val.is_a?(NilClass)
+          next
+        elsif val.toml_table? || val.toml_table_array?
+          tables[key] = val
+        else
+          values[key] = val
+        end
       end
     end
 
@@ -50,38 +65,44 @@ class Hash
     toml
   end
 end
+
 class Array
   def to_toml(path = "")
-    unless self.map(&:class).uniq.length == 1
+    unless map(&:class).uniq.length == 1
       raise "All array values must be the same type"
     end
 
-    if self.first.toml_table?
+    if first.toml_table?
       toml = ""
-      self.each do |val|
+      each do |val|
         toml << "\n[[#{path}]]\n"
         toml << val.to_toml(path)
       end
-      return toml
+      toml
     else
-      "[" + self.map {|v| v.to_toml(path) }.join(",") + "]"
+      "[" + map { |v| v.to_toml(path) }.join(",") + "]"
     end
   end
 end
+
 class TrueClass
-  def to_toml(path = ""); "true"; end
+  def to_toml(path = "") = "true"
 end
+
 class FalseClass
-  def to_toml(path = ""); "false"; end
+  def to_toml(path = "") = "false"
 end
+
 class String
-  def to_toml(path = ""); self.inspect; end
+  def to_toml(path = "") = inspect
 end
+
 class Numeric
-  def to_toml(path = ""); self.to_s; end
+  def to_toml(path = "") = to_s
 end
+
 class DateTime
   def to_toml(path = "")
-    self.rfc3339
+    rfc3339
   end
 end
