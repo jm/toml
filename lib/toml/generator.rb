@@ -1,19 +1,18 @@
-
-module TOML  
+module TOML
   class Generator
     attr_reader :body, :doc
 
-    def initialize(doc)
+    def initialize(doc, preserve = false)
       # Ensure all the to_toml methods are injected into the base Ruby classes
       # used by TOML.
       self.class.inject!
-      
+
       @doc = doc
-      @body = doc.to_toml
-      
-      return @body
+      @body = doc.to_toml("", preserve)
+
+      @body
     end
-    
+
     # Whether or not the injections have already been done.
     @@injected = false
     # Inject to_toml methods into the Ruby classes used by TOML (booleans,
@@ -22,8 +21,8 @@ module TOML
     # if something doesn't have a to_toml method).
     def self.inject!
       return if @@injected
-      require 'toml/monkey_patch'
+      require "toml/monkey_patch"
       @@injected = true
     end
-  end#Generator
-end#TOML
+  end # Generator
+end # TOML
