@@ -1,87 +1,116 @@
 # Adds to_toml methods to base Ruby classes used by the generator.
 class Object
   def toml_table?
-    self.kind_of?(Hash)
+    is_a?(Hash)
   end
+
   def toml_table_array?
-    self.kind_of?(Array) && self.first.toml_table?
+    is_a?(Array) && first.toml_table?
   end
 end
+
 class Hash
-  def to_toml(path = "")
-    return "" if self.empty?
+  def to_toml(path = '')
+    return '' if empty?
 
     tables = {}
     values = {}
-    self.keys.sort.each do |key|
+    keys.sort.each do |key|
       val = self[key]
-      if val.kind_of?(NilClass)
-        next
-      elsif val.toml_table? || val.toml_table_array?
+      next if val.nil?
+
+      if val.toml_table? || val.toml_table_array?
         tables[key] = val
       else
         values[key] = val
       end
     end
 
-    toml = ""
-    values.each do |key, val|
-      toml << "#{key} = #{val.to_toml(key)}\n"
+    pairs = values.map do |key, val|
+      return nil unless key && val
+
+      "#{key} = #{val.to_toml(key)}"
     end
+
+    toml = pairs.reject.to_a.join('\n')
 
     tables.each do |key, val|
       key = "#{path}.#{key}" unless path.empty?
       toml_val = val.to_toml(key)
-      unless toml_val.empty?
-        if val.toml_table?
-          non_table_vals = val.values.reject do |v|
-            v.toml_table? || v.toml_table_array?
-          end
-
-          # Only add the table key if there are non table values.
-          if non_table_vals.length > 0
-            toml << "\n[#{key}]\n"
-          end
+      next if toml_val.empty?
+      if val.toml_table?
+        non_table_vals = val.values.reject do |v|
+          v.toml_table? || v.toml_table_array?
         end
-        toml << toml_val
+
+        # Only add the table key if there are non table values.
+        toml << "\n[#{key}]\n" if non_table_vals.length > 0
       end
+      toml << toml_val
     end
 
     toml
   end
 end
-class Array
-  def to_toml(path = "")
-    unless self.map(&:class).uniq.length == 1
-      raise "All array values must be the same type"
-    end
 
-    if self.first.toml_table?
-      toml = ""
-      self.each do |val|
-        toml << "\n[[#{path}]]\n"
-        toml << val.to_toml(path)
+class Array
+  def to_toml(path = '')
+    raise 'All array values must be the same type' unless map(&:class).uniq.length == 1
+
+    if first.toml_table?
+      values = map do |val|
+        "[[#{path}]]\n#{val.to_toml(path)}"
       end
-      return toml
+
+      values.prepend ''
+
+      values.join('\n')
     else
-      "[" + self.map {|v| v.to_toml(path) }.join(",") + "]"
+      "[#{map { |v| v.to_toml(path) }.join(',') }]"
     end
   end
 end
+
 class TrueClass
-  def to_toml(path = ""); "true"; end
+  def to_toml(*)
+    'true'
+  end
 end
+
 class FalseClass
-  def to_toml(path = ""); "false"; end
+  def to_toml(*)
+    'false'
+  end
 end
+
 class String
-  def to_toml(path = ""); self.inspect; end
+  def to_toml(*)
+    inspect
+  end
 end
+
 class Numeric
-  def to_toml(path = ""); self.to_s; end
+  def to_toml(*)
+    to_s
+  end
+
+  def empty?
+    false
+  end
 end
+
 class DateTime
-  def to_toml(path = "")
-    self.rfc3339
+  def to_toml(*)
+    rfc3339
+  end
+end
+
+class NilClass
+  def to_toml(*)
+    ''
+  end
+
+  def empty?
+    true
   end
 end
