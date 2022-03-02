@@ -32,7 +32,7 @@ class Hash
       "#{key} = #{val.to_toml(key)}"
     end
 
-    toml = pairs.reject.to_a.join('\n')
+    toml = pairs.reject.to_a.join("\n")
 
     tables.each do |key, val|
       key = "#{path}.#{key}" unless path.empty?
@@ -64,9 +64,9 @@ class Array
 
       values.prepend ''
 
-      values.join('\n')
+      values.join("\n")
     else
-      "[#{map { |v| v.to_toml(path) }.join(',') }]"
+      "[#{map { |v| v.to_toml(path) }.join(',')}]"
     end
   end
 end
