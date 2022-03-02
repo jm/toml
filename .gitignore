@@ -3,3 +3,5 @@ test.*
 coverage
 Gemfile.lock
 .DS_Store
+.vscode/
+.idea/
