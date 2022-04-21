@@ -55,7 +55,7 @@ module TOML
       space >> comment.maybe >> str("\n") >> all_space
     }
 
-    rule(:key) { match["^. \t\\]"].repeat(1) }
+    rule(:key) { match["^ \t\\]"].repeat(1) }
     rule(:table_name) { key.as(:key) >> (str(".") >> key.as(:key)).repeat }
 
     rule(:comment_line) { comment >> newline >> all_space }
